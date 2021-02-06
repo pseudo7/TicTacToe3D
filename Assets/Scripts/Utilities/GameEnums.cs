@@ -1,4 +1,4 @@
-namespace TicTacToe3D.Utilites
+namespace TicTacToe3D.Utilities
 {
     public static class GameEnums
     {
