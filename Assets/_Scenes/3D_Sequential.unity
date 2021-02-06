@@ -195,6 +195,7 @@ GameObject:
   m_Component:
   - component: {fileID: 602655601}
   - component: {fileID: 602655602}
+  - component: {fileID: 602655603}
   m_Layer: 0
   m_Name: '[Bootstrap]'
   m_TagString: Untagged
@@ -226,6 +227,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6d4fced263bf10e4798a29f6160031ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &602655603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 602655600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63d957ea4dec20c4bbd5459d96a3adc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &705507993
@@ -489,7 +502,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1449505550}
-  m_LocalRotation: {x: 0, y: -0.258819, z: 0, w: 0.9659259}
+  m_LocalRotation: {x: 0, y: 0.2588191, z: 0, w: 0.9659258}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -505,7 +518,7 @@ Transform:
   - {fileID: 1917267900}
   m_Father: {fileID: 0}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 30, z: 0}
 --- !u!1001 &1536685278
 PrefabInstance:
   m_ObjectHideFlags: 0
