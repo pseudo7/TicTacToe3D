@@ -1,6 +1,8 @@
+using System;
 using TicTacToe3D.Pillars;
 using TicTacToe3D.Services;
 using TicTacToe3D.Shapes;
+using UnityEngine;
 
 namespace TicTacToe3D.Games
 {
@@ -9,6 +11,7 @@ namespace TicTacToe3D.Games
         protected internal override bool[,,] GameMatrix { get; set; }
         protected internal override PillarBase[] Pillars { get; set; }
 
+        private int _currentShapeCount;
         private int _currentMaterialCount;
 
         protected override void SetupGame()
@@ -36,22 +39,25 @@ namespace TicTacToe3D.Games
         protected internal override void AddShape(int pillarIndex)
         {
             var pillar = Pillars[pillarIndex];
-            var shape = Instantiate(Bootstrap.BootstrapInstance.GetService<ResourcesService>().CrossPrefab,
-                pillar.SegmentSpawnPosition, pillar.SegmentSpawnRotation);
-            shape.SetMaterial(((_currentMaterialCount++) & 1) != 0
+            var targetSegment = pillar.PillarSegments
+                .Find(x => !x.CurrentShape);
+            if (!targetSegment)
+            {
+                Debug.LogError($"Segments are filled for Pillar: {pillarIndex}");
+                return;
+            }
+
+            var shapePrefab = (_currentShapeCount++ & 1) != 0
+                ? Bootstrap.BootstrapInstance.GetService<ResourcesService>().CrossPrefab
+                : Bootstrap.BootstrapInstance.GetService<ResourcesService>().SpherePrefab;
+            var shape = Instantiate(shapePrefab, pillar.SegmentSpawnPosition, pillar.SegmentSpawnRotation);
+            shape.transform.SetParent(pillar.transform, true);
+            shape.SetMaterial((_currentMaterialCount++ & 1) != 0
                 ? Bootstrap.BootstrapInstance.GetService<ResourcesService>().DarkWoodMat
                 : Bootstrap.BootstrapInstance.GetService<ResourcesService>().LightWoodMat);
 
-
-            var rowIndex = pillar.PillarRowIndex;
-            var columnIndex = pillar.PillarColumnIndex;
-
-            var segmentIndex = 0;
-            for (; segmentIndex < 3; segmentIndex++)
-                if (!GameMatrix[rowIndex, columnIndex, segmentIndex])
-                    break;
-
-            //TODO: Get a better from Pillar class only to add shape directly instead of doing these calculations
+            targetSegment.CurrentShape = shape;
+            targetSegment.SetSegment();
         }
     }
 }

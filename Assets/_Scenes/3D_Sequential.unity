@@ -489,7 +489,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1449505551}
   m_Layer: 0
-  m_Name: Stand
+  m_Name: GameSet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -723,7 +723,7 @@ GameObject:
   - component: {fileID: 1917267898}
   - component: {fileID: 1917267897}
   m_Layer: 0
-  m_Name: Base
+  m_Name: Platform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
