@@ -12,8 +12,8 @@ namespace TicTacToe3D.Pillars
         protected internal int PillarRowIndex { get; set; }
         protected internal int PillarColumnIndex { get; set; }
         protected abstract Renderer PillarRenderer { get; set; }
-        protected internal abstract Vector3 SegmentSpawnPosition { get; set; }
-        protected internal abstract Quaternion SegmentSpawnRotation { get; set; }
+        protected internal abstract Vector3 SegmentSpawnPosition { get; }
+        protected internal abstract Quaternion SegmentSpawnRotation { get; }
 
         protected abstract void SetupPillar();
 
@@ -29,10 +29,10 @@ namespace TicTacToe3D.Pillars
         private void OnMouseUpAsButton() =>
             OnPillarClicked();
 
-        private void OnMouseEnter() =>
+        private void OnMouseDown() =>
             OnPillarHighlighted();
 
-        private void OnMouseExit() =>
+        private void OnMouseUp() =>
             OnPillarUnHighlighted();
 
         protected abstract void OnPillarClicked();

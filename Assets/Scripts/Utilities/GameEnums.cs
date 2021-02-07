@@ -7,5 +7,19 @@ namespace TicTacToe3D.Utilities
             LightWood,
             DarkWood
         }
+
+        public enum ShapeType
+        {
+            None,
+            Cross,
+            Zero
+        }
+
+        public enum AxisType
+        {
+            X,
+            Y,
+            Z
+        }
     }
 }

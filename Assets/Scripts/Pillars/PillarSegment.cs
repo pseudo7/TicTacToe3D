@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TicTacToe3D.Shapes;
 using TicTacToe3D.Utilities;
 using UnityEngine;
@@ -20,10 +21,7 @@ namespace TicTacToe3D.Pillars
                 [SegmentIndex] = this;
         }
 
-        internal void SetSegment() =>
-            MoveToThisSegment();
-
-        private void MoveToThisSegment() =>
-            CurrentShape.transform.MoveToPosition(transform.position, 1F);
+        internal void MoveShapeToSegment(Action onCompleteAction = null) =>
+            CurrentShape.transform.MoveToPosition(transform, 1F, onCompleteAction);
     }
 }

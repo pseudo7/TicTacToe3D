@@ -6,8 +6,12 @@ namespace TicTacToe3D.Pillars
     public class ThreeSegmentPillar : PillarBase
     {
         protected override Renderer PillarRenderer { get; set; }
-        protected internal override Vector3 SegmentSpawnPosition { get; set; }
-        protected internal override Quaternion SegmentSpawnRotation { get; set; }
+
+        protected internal override Vector3 SegmentSpawnPosition
+            => transform.position + Vector3.up * 12;
+
+        protected internal override Quaternion SegmentSpawnRotation
+            => transform.rotation;
 
         protected override void SetupPillar()
         {
@@ -17,8 +21,6 @@ namespace TicTacToe3D.Pillars
             Bootstrap.BootstrapInstance.GetService<GameManagementService>()
                 .CurrentGame.Pillars[PillarIndex] = this;
             PillarRenderer = GetComponent<Renderer>();
-            SegmentSpawnPosition = transform.position + Vector3.up * 12;
-            SegmentSpawnRotation = transform.rotation;
         }
 
         protected internal override void SetMaterial(Material material) =>
