@@ -7,9 +7,11 @@ namespace TicTacToe3D.Utilities
     {
         [SerializeField] private GameEnums.AxisType rotateAround;
         [SerializeField] private Rigidbody rotatingBody;
-        [SerializeField] [Range(1, 3)] private float stiffness = 2F;
+        [SerializeField] [Range(1, 3)] private float duration = 2F;
+        [SerializeField] [Range(1, 20)] private float stiffness = 2F;
 
         private float _mouseDelta;
+        private float _stiffness;
         private Vector3 _rotationAxis;
         private const string MouseXAxis = "Mouse X";
         private const string MouseYAxis = "Mouse Y";
@@ -20,8 +22,9 @@ namespace TicTacToe3D.Utilities
         private void Awake()
         {
             rotatingBody.useGravity = false;
-            rotatingBody.angularDrag = stiffness;
+            rotatingBody.angularDrag = duration;
             var constraints = RigidbodyConstraints.FreezeAll;
+            _stiffness = 1 / stiffness;
             switch (rotateAround)
             {
                 case GameEnums.AxisType.X:
@@ -43,7 +46,7 @@ namespace TicTacToe3D.Utilities
 
         private void OnMouseDrag()
         {
-            _mouseDelta = (Input.GetAxis(MouseXAxis) + Input.GetAxis(MouseYAxis)) * -1;
+            _mouseDelta = (Input.GetAxis(MouseXAxis) + Input.GetAxis(MouseYAxis)) * -1 * _stiffness;
             rotatingBody.AddTorque(_rotationAxis * _mouseDelta, ForceMode.Impulse);
         }
     }
