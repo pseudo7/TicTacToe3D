@@ -10,9 +10,9 @@ namespace TicTacToe3D.Utilities
 
         public enum ShapeType
         {
-            None,
-            Cross,
-            Zero
+            None = 0,
+            Cross = 2,
+            Zero = 3
         }
 
         public enum AxisType

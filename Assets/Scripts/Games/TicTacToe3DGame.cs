@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text;
 using TicTacToe3D.Pillars;
 using TicTacToe3D.Services;
@@ -91,7 +92,51 @@ namespace TicTacToe3D.Games
             PrintGrid();
             _stateTransitionPossible = false;
             targetSegment.MoveShapeToSegment(() => GameStateMachine.UpdateState(new NextTurnState(StateAction)));
+            CheckForFinish();
         }
+
+        protected override bool CheckForFinish()
+        {
+            if (!CheckForPillars(out var solution)) return false;
+            solution.ForEach(tuple => Debug.Log(tuple.ToString().ToColoredString(Color.green)));
+            // solution.ForEach(x =>
+            // {
+            //     var pillar = Pillars[x.Item1 * 3 + x.Item2];
+            //     pillar.PillarSegments[x.Item3].CurrentShape.gameObject.SetActive(false);
+            // });
+            return true;
+        }
+
+        private bool CheckForPillars(out List<(int, int, int)> solution)
+        {
+            solution = new List<(int, int, int)>(3);
+            int addition;
+            for (var i = 0; i < 3; i++)
+            {
+                for (var j = 0; j < 3; j++)
+                {
+                    addition = 1;
+                    solution.Clear();
+                    for (var k = 0; k < 3; k++)
+                    {
+                        addition *= (int) GameMatrix[i, j, k];
+                        solution.Add((i, j, k));
+                    }
+
+                    /*
+ * 0: One or more place is not set
+ * 8: All are Cross
+ * 27 All are Zero
+ */
+                    if (addition == 8 || addition == 27)
+                        return true;
+                    Debug.LogWarning($"Addition Count: {addition}");
+                }
+            }
+
+            return false;
+        }
+
 
         private void StateAction(IState currentState)
         {

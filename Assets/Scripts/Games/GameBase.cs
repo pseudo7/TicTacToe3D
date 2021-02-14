@@ -15,6 +15,7 @@ namespace TicTacToe3D.Games
         protected internal abstract void HighLightPillar(int pillarIndex);
         protected internal abstract void UnHighLightPillar(int pillarIndex);
         protected internal abstract void AddShape(int pillarIndex);
+        protected abstract bool CheckForFinish();
 
         protected virtual void Awake() =>
             SetupGame();
