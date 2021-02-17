@@ -11,6 +11,7 @@ namespace TicTacToe3D.Games
         protected internal abstract PillarBase[] Pillars { get; set; }
         protected abstract IStateMachine GameStateMachine { get; set; }
         protected internal abstract SwipeRotator CurrentSwipeRotator { get; set; }
+        protected abstract int Dimension { get; set; }
         protected abstract void SetupGame();
         protected internal abstract void HighLightPillar(int pillarIndex);
         protected internal abstract void UnHighLightPillar(int pillarIndex);

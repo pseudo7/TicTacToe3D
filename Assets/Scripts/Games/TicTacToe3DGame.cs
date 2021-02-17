@@ -11,7 +11,6 @@ namespace TicTacToe3D.Games
 {
     public class TicTacToe3DGame : GameBase
     {
-        //TODO: Add Game Finish Logic
         //TODO: Add Delay Highlight (Check if in Mobile it is shown)
         //TODO: Add Single Pillar & Its pillar to have high light property as a single unit
         protected internal override GameEnums.ShapeType[,,] GameMatrix { get; set; }
@@ -23,9 +22,12 @@ namespace TicTacToe3D.Games
 
         protected internal override SwipeRotator CurrentSwipeRotator { get; set; }
 
+        protected override int Dimension { set; get; }
+
         protected override void SetupGame()
         {
-            GameMatrix = new GameEnums.ShapeType [3, 3, 3];
+            Dimension = 3;
+            GameMatrix = new GameEnums.ShapeType [Dimension, Dimension, Dimension];
             Pillars = new PillarBase[9];
             GameStateMachine = gameObject.AddComponent<TurnBasedStateMachine>();
             GameStateMachine.Initialisation(new NextTurnState(StateAction));
@@ -97,46 +99,343 @@ namespace TicTacToe3D.Games
 
         protected override bool CheckForFinish()
         {
-            if (!CheckForPillars(out var solution)) return false;
-            solution.ForEach(tuple => Debug.Log(tuple.ToString().ToColoredString(Color.green)));
-            // solution.ForEach(x =>
-            // {
-            //     var pillar = Pillars[x.Item1 * 3 + x.Item2];
-            //     pillar.PillarSegments[x.Item3].CurrentShape.gameObject.SetActive(false);
-            // });
-            return true;
+            List<(int, int, int)> solution;
+            if (CheckForPillars(out solution))
+            {
+                solution.ForEach(tuple => Debug.Log(tuple.ToString().ToColoredString(Color.green)));
+                return true;
+            }
+
+            if (CheckForHLevels(out solution))
+            {
+                solution.ForEach(tuple => Debug.Log(tuple.ToString().ToColoredString(Color.cyan)));
+                return true;
+            }
+
+            if (CheckForVLevels(out solution))
+            {
+                solution.ForEach(tuple => Debug.Log(tuple.ToString().ToColoredString(Color.yellow)));
+                return true;
+            }
+
+            if (CheckForForwardDiagonals(out solution))
+            {
+                solution.ForEach(tuple => Debug.Log(tuple.ToString().ToColoredString(Color.red)));
+                return true;
+            }
+
+            if (CheckForReverseDiagonals(out solution))
+            {
+                solution.ForEach(tuple => Debug.Log(tuple.ToString().ToColoredString(Color.magenta)));
+                return true;
+            }
+
+            if (CheckForForwardDiagonalDiagonals(out solution))
+            {
+                solution.ForEach(tuple => Debug.Log(tuple.ToString().ToColoredString(Color.white)));
+                return true;
+            }
+
+            if (CheckForReverseDiagonalDiagonals(out solution))
+            {
+                solution.ForEach(tuple => Debug.Log(tuple.ToString().ToColoredString(Color.white)));
+                return true;
+            }
+
+            return false;
         }
 
         private bool CheckForPillars(out List<(int, int, int)> solution)
         {
-            solution = new List<(int, int, int)>(3);
+            solution = new List<(int, int, int)>(Dimension);
             int addition;
-            for (var i = 0; i < 3; i++)
+            for (var i = 0; i < Dimension; i++)
             {
-                for (var j = 0; j < 3; j++)
+                for (var j = 0; j < Dimension; j++)
                 {
                     addition = 1;
                     solution.Clear();
-                    for (var k = 0; k < 3; k++)
+                    for (var k = 0; k < Dimension; k++)
                     {
                         addition *= (int) GameMatrix[i, j, k];
                         solution.Add((i, j, k));
                     }
 
                     /*
- * 0: One or more place is not set
- * 8: All are Cross
- * 27 All are Zero
- */
+                     * 0: One or more place is not set
+                     * 8: All are Cross
+                     * 27 All are Zero
+                     */
                     if (addition == 8 || addition == 27)
                         return true;
-                    Debug.LogWarning($"Addition Count: {addition}");
+                    Debug.LogWarning($"Pillar Addition Count: {addition}");
                 }
             }
 
             return false;
         }
 
+        private bool CheckForHLevels(out List<(int, int, int)> solution)
+        {
+            solution = new List<(int, int, int)>(Dimension);
+            int addition;
+            for (var i = 0; i < Dimension; i++)
+            {
+                for (var j = 0; j < Dimension; j++)
+                {
+                    addition = 1;
+                    solution.Clear();
+                    for (var k = 0; k < Dimension; k++)
+                    {
+                        addition *= (int) GameMatrix[i, k, j];
+                        solution.Add((i, k, j));
+                    }
+
+                    /*
+                     * 0: One or more place is not set
+                     * 8: All are Cross
+                     * 27 All are Zero
+                     */
+                    if (addition == 8 || addition == 27)
+                        return true;
+                    Debug.LogWarning($"H Level Addition Count: {addition}");
+                }
+            }
+
+            return false;
+        }
+
+        private bool CheckForVLevels(out List<(int, int, int)> solution)
+        {
+            solution = new List<(int, int, int)>(Dimension);
+            int addition;
+            for (var i = 0; i < Dimension; i++)
+            {
+                for (var j = 0; j < Dimension; j++)
+                {
+                    addition = 1;
+                    solution.Clear();
+                    for (var k = 0; k < Dimension; k++)
+                    {
+                        addition *= (int) GameMatrix[k, i, j];
+                        solution.Add((k, i, j));
+                    }
+
+                    /*
+                     * 0: One or more place is not set
+                     * 8: All are Cross
+                     * 27 All are Zero
+                     */
+                    if (addition == 8 || addition == 27)
+                        return true;
+                    Debug.LogWarning($"V Level Addition Count: {addition}");
+                }
+            }
+
+            return false;
+        }
+
+        private bool CheckForReverseDiagonals(out List<(int, int, int)> solution)
+        {
+            solution = new List<(int, int, int)>(Dimension);
+            int addition;
+            for (var i = 0; i < Dimension; i++)
+            {
+                addition = 1;
+                solution.Clear();
+                for (var j = 0; j < Dimension; j++)
+                {
+                    addition *= (int) GameMatrix[i, j, j];
+                    solution.Add((i, j, j));
+
+                    /*
+                     * 0: One or more place is not set
+                     * 8: All are Cross
+                     * 27 All are Zero
+                     */
+                    if (addition == 8 || addition == 27)
+                        return true;
+                    Debug.LogWarning($"R Diagonal Addition Count: {addition}");
+                }
+
+                addition = 1;
+                solution.Clear();
+                for (var j = 0; j < Dimension; j++)
+                {
+                    addition *= (int) GameMatrix[j, i, j];
+                    solution.Add((j, i, j));
+
+                    /*
+                     * 0: One or more place is not set
+                     * 8: All are Cross
+                     * 27 All are Zero
+                     */
+                    if (addition == 8 || addition == 27)
+                        return true;
+                    Debug.LogWarning($"R Diagonal Addition Count: {addition}");
+                }
+
+                addition = 1;
+                solution.Clear();
+                for (var j = 0; j < Dimension; j++)
+                {
+                    addition *= (int) GameMatrix[j, j, i];
+                    solution.Add((j, j, i));
+
+                    /*
+                     * 0: One or more place is not set
+                     * 8: All are Cross
+                     * 27 All are Zero
+                     */
+                    if (addition == 8 || addition == 27)
+                        return true;
+                    Debug.LogWarning($"R Diagonal Addition Count: {addition}");
+                }
+            }
+
+            return false;
+        }
+
+        private bool CheckForForwardDiagonals(out List<(int, int, int)> solution)
+        {
+            solution = new List<(int, int, int)>(Dimension);
+            int addition;
+            for (var i = 0; i < Dimension; i++)
+            {
+                addition = 1;
+                solution.Clear();
+                for (var j = 0; j < Dimension; j++)
+                {
+                    addition *= (int) GameMatrix[i, j, Dimension - j - 1];
+                    solution.Add((i, j, Dimension - j - 1));
+
+                    /*
+                     * 0: One or more place is not set
+                     * 8: All are Cross
+                     * 27 All are Zero
+                     */
+                    if (addition == 8 || addition == 27)
+                        return true;
+                    Debug.LogWarning($"F Diagonal Addition Count: {addition}");
+                }
+
+                addition = 1;
+                solution.Clear();
+                for (var j = 0; j < Dimension; j++)
+                {
+                    addition *= (int) GameMatrix[j, i, Dimension - j - 1];
+                    solution.Add((j, i, Dimension - j - 1));
+
+                    /*
+                     * 0: One or more place is not set
+                     * 8: All are Cross
+                     * 27 All are Zero
+                     */
+                    if (addition == 8 || addition == 27)
+                        return true;
+                    Debug.LogWarning($"F Diagonal Addition Count: {addition}");
+                }
+
+                addition = 1;
+                solution.Clear();
+                for (var j = 0; j < Dimension; j++)
+                {
+                    addition *= (int) GameMatrix[j, Dimension - j - 1, i];
+                    solution.Add((j, Dimension - j - 1, i));
+
+                    /*
+                     * 0: One or more place is not set
+                     * 8: All are Cross
+                     * 27 All are Zero
+                     */
+                    if (addition == 8 || addition == 27)
+                        return true;
+                    Debug.LogWarning($"F Diagonal Addition Count: {addition}");
+                }
+            }
+
+            return false;
+        }
+
+        private bool CheckForForwardDiagonalDiagonals(out List<(int, int, int)> solution)
+        {
+            solution = new List<(int, int, int)>(Dimension);
+            var addition = 1;
+            solution.Clear();
+            for (var i = 0; i < Dimension; i++)
+            {
+                addition *= (int) GameMatrix[i, i, Dimension - i - 1];
+                solution.Add((i, i, Dimension - i - 1));
+
+                /*
+                 * 0: One or more place is not set
+                 * 8: All are Cross
+                 * 27 All are Zero
+                 */
+                if (addition == 8 || addition == 27)
+                    return true;
+                Debug.LogWarning($"FD Diagonal Addition Count: {addition}");
+            }
+
+            addition = 1;
+            solution.Clear();
+            for (var i = 0; i < Dimension; i++)
+
+            {
+                addition *= (int) GameMatrix[i, Dimension - i - 1, i];
+                solution.Add((i, Dimension - i - 1, i));
+
+                /*
+                 * 0: One or more place is not set
+                 * 8: All are Cross
+                 * 27 All are Zero
+                 */
+                if (addition == 8 || addition == 27)
+                    return true;
+                Debug.LogWarning($"FD Diagonal Addition Count: {addition}");
+            }
+
+            addition = 1;
+            solution.Clear();
+            for (var i = 0; i < Dimension; i++)
+            {
+                addition *= (int) GameMatrix[Dimension - i - 1, i, i];
+                solution.Add((Dimension - i - 1, i, i));
+
+                /*
+                 * 0: One or more place is not set
+                 * 8: All are Cross
+                 * 27 All are Zero
+                 */
+                if (addition == 8 || addition == 27)
+                    return true;
+                Debug.LogWarning($"FD Diagonal Addition Count: {addition}");
+            }
+
+            return false;
+        }
+
+        private bool CheckForReverseDiagonalDiagonals(out List<(int, int, int)> solution)
+        {
+            solution = new List<(int, int, int)>(Dimension);
+            var addition = 1;
+            for (var i = 0; i < Dimension; i++)
+            {
+                addition *= (int) GameMatrix[i, i, i];
+                solution.Add((i, i, i));
+
+                /*
+                 * 0: One or more place is not set
+                 * 8: All are Cross
+                 * 27 All are Zero
+                 */
+                if (addition == 8 || addition == 27)
+                    return true;
+                Debug.LogWarning($"RD Diagonal Addition Count: {addition}");
+            }
+
+            return false;
+        }
 
         private void StateAction(IState currentState)
         {
@@ -147,13 +446,15 @@ namespace TicTacToe3D.Games
         private void PrintGrid()
         {
             var builder = new StringBuilder();
-            var debugType = "* ";
 
-            for (var i = 0; i < 3; i++)
+            var debugType = "* ";
+            for (var i = 0;
+                i < Dimension;
+                i++)
             {
-                for (var j = 0; j < 3; j++)
+                for (var j = 0; j < Dimension; j++)
                 {
-                    for (var k = 0; k < 3; k++)
+                    for (var k = 0; k < Dimension; k++)
                     {
                         switch (GameMatrix[i, j, k])
                         {
