@@ -18,6 +18,7 @@ namespace TicTacToe3D.Pillars
         protected abstract void SetupPillar();
 
         protected internal abstract void SetMaterial(Material material);
+        protected internal abstract void SetSegmentMaterial(bool isFadedMat);
 
         protected virtual void Awake()
         {

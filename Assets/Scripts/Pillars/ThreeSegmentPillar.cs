@@ -26,6 +26,14 @@ namespace TicTacToe3D.Pillars
         protected internal override void SetMaterial(Material material) =>
             PillarRenderer.material = material;
 
+        protected internal override void SetSegmentMaterial(bool isFadedMat)
+        {
+            PillarSegments.ForEach(x =>
+            {
+                if (x.CurrentShape is { }) x.CurrentShape.SetMaterial(isFadedMat);
+            });
+        }
+
         protected override void OnPillarClicked()
         {
             Bootstrap.BootstrapInstance.GetService<GameManagementService>()

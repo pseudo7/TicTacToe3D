@@ -11,8 +11,8 @@ namespace TicTacToe3D.Games
 {
     public class TicTacToe3DGame : GameBase
     {
-        //TODO: Add Delay Highlight (Check if in Mobile it is shown)
         //TODO: Add Single Pillar & Its pillar to have high light property as a single unit
+        //TODO: Add Delay Highlight (Check if in Mobile it is shown)
         protected internal override GameEnums.ShapeType[,,] GameMatrix { get; set; }
         protected internal override PillarBase[] Pillars { get; set; }
 
@@ -38,19 +38,26 @@ namespace TicTacToe3D.Games
 
         protected internal override void HighLightPillar(int pillarIndex)
         {
-            // CurrentSwipeRotator.KillInertia();
             var count = Pillars.Length;
             while (count-- > 0)
+            {
                 Pillars[count]
                     .SetMaterial(Bootstrap.BootstrapInstance.GetService<ResourcesService>().LightWoodMatFaded);
+                Pillars[count].SetSegmentMaterial(true);
+            }
+
             Pillars[pillarIndex].SetMaterial(Bootstrap.BootstrapInstance.GetService<ResourcesService>().LightWoodMat);
+            Pillars[pillarIndex].SetSegmentMaterial(false);
         }
 
         protected internal override void UnHighLightPillar(int pillarIndex)
         {
             var count = Pillars.Length;
             while (count-- > 0)
+            {
                 Pillars[count].SetMaterial(Bootstrap.BootstrapInstance.GetService<ResourcesService>().LightWoodMat);
+                Pillars[count].SetSegmentMaterial(false);
+            }
         }
 
         protected internal override void AddShape(int pillarIndex)

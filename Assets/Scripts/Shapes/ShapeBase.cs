@@ -10,5 +10,6 @@ namespace TicTacToe3D.Shapes
         protected abstract void SetupShape();
         protected abstract void MoveToPosition(int segmentIndex);
         protected internal abstract void SetMaterial(Material material);
+        protected internal abstract void SetMaterial(bool isFadedMat);
     }
 }
